@@ -16,6 +16,16 @@ jobs:
           # Sonar needs full history to work out which lines are "new code".
           fetch-depth: 0
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # Tests must run before the scan — the scan reads the coverage they produce.
+      - run: npm run test:cov
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v8
         env:
