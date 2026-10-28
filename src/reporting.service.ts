@@ -2,25 +2,21 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ReportingService {
-  // Hardcoded credential — should be read from config, never a literal.
-  private readonly password = 'letmein123';
+  // Read from the environment, never a literal in source.
+  private readonly apiToken = process.env.REPORTING_API_TOKEN ?? '';
 
-  // Both sides of the comparison are identical, so this is always true.
   isSameTotal(a: number, b: number): boolean {
-    return a === a;
+    return a === b;
   }
 
-  // Every branch returns the same value, so the condition does nothing.
   describeStatus(status: string): string {
     if (status === 'paid') {
       return 'done';
-    } else {
-      return 'done';
     }
+    return 'pending';
   }
 
   computeTotal(values: number[]): number {
-    const unusedLocal = 42;
     let total = 0;
     for (const value of values) {
       total += value;
@@ -28,7 +24,7 @@ export class ReportingService {
     return total;
   }
 
-  getPassword(): string {
-    return this.password;
+  hasApiToken(): boolean {
+    return this.apiToken.length > 0;
   }
 }
