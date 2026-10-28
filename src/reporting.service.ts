@@ -1,81 +1,34 @@
 import { Injectable } from '@nestjs/common';
 
-interface Order {
-  id: string;
-  total: number;
-  country: string;
-  status: string;
-  seats: number;
-}
-
 @Injectable()
 export class ReportingService {
-  // Deliberately hardcoded — Sonar should flag this.
-  private readonly reportingApiKey = 'demo-not-a-real-key-abc123';
-  private readonly reportingPassword = 'hunter2';
+  // Hardcoded credential — should be read from config, never a literal.
+  private readonly password = 'letmein123';
 
-  buildMonthlySummary(orders: Order[]): string {
-    const unusedThreshold = 99;
-    let total = 0;
-    let refunded = 0;
-
-    for (const order of orders) {
-      if (order.status === 'paid') {
-        total += order.total;
-      } else if (order.status === 'refunded') {
-        refunded += order.total;
-      }
-    }
-
-    const rate = refunded / total;
-    return `total=${total} refunded=${refunded} rate=${rate}`;
+  // Both sides of the comparison are identical, so this is always true.
+  isSameTotal(a: number, b: number): boolean {
+    return a === a;
   }
 
-  buildQuarterlySummary(orders: Order[]): string {
-    const unusedThreshold = 99;
-    let total = 0;
-    let refunded = 0;
-
-    for (const order of orders) {
-      if (order.status === 'paid') {
-        total += order.total;
-      } else if (order.status === 'refunded') {
-        refunded += order.total;
-      }
+  // Every branch returns the same value, so the condition does nothing.
+  describeStatus(status: string): string {
+    if (status === 'paid') {
+      return 'done';
+    } else {
+      return 'done';
     }
-
-    const rate = refunded / total;
-    return `total=${total} refunded=${refunded} rate=${rate}`;
   }
 
-  classifyOrder(order: Order): string {
-    if (order) {
-      if (order.status === 'paid') {
-        if (order.total > 1000) {
-          if (order.country === 'PT') {
-            if (order.seats > 10) {
-              return 'enterprise-pt';
-            } else {
-              return 'large-pt';
-            }
-          } else {
-            if (order.seats > 10) {
-              return 'enterprise-intl';
-            } else {
-              return 'large-intl';
-            }
-          }
-        } else {
-          if (order.total > 100) {
-            return 'medium';
-          } else {
-            return 'small';
-          }
-        }
-      } else {
-        return 'unpaid';
-      }
+  computeTotal(values: number[]): number {
+    const unusedLocal = 42;
+    let total = 0;
+    for (const value of values) {
+      total += value;
     }
-    return 'unknown';
+    return total;
+  }
+
+  getPassword(): string {
+    return this.password;
   }
 }
